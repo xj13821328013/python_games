@@ -1,10 +1,14 @@
 # 1.creating a pygame window and responding to user input
 # 2.setting the background color
-
+# 3. creating a setting class, to make an instance of settings in
+# the project and use it to access our settings, we need to modify
+# alien_invasion.py as follows
 
 import sys
 # use the tools in sys module to exit the game when the player quits
 import pygame
+
+from settings import Settings
 
 class AlienVasion:
     
@@ -12,12 +16,15 @@ class AlienVasion:
     def __init__(self):
         # Initialize the game, and create game resources
         pygame.init()
+        # Then we create an instance of Settings and assign it to self.settings
+        self.settings = Settings()
         # we call set_mode to create a display window, 1200 pixels wide and 800 pixels high
-        self.screen = pygame.display.set_mode((1200, 800))
+        # self.screen = pygame.display.set_mode((1200, 800))
+        self.screen = pygame.display.set_mode((self.settings.screen_width,self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
 
         # set the background color
-        self.bg_color = (230, 230, 230)
+        # self.bg_color = (230, 230, 230)
     
     def run_game(self):
         # the while loop contains an event loop and code that manages
@@ -34,7 +41,7 @@ class AlienVasion:
             # Redraw the screen during each pass through the loop
             # Each color value can range from 0 to 255. The color value (255, 0, 0) is red, 
             # (0, 255, 0) is green, and (0, 0, 255) is blue.
-            self.screen.fill(self.bg_color)
+            self.screen.fill(self.settings.bg_color)
             # tells Pygame to make the most recently drawn screen visible
             pygame.display.flip()
 
