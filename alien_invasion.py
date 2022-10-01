@@ -1,14 +1,16 @@
 # 1.creating a pygame window and responding to user input
 # 2.setting the background color
-# 3. creating a setting class, to make an instance of settings in
-# the project and use it to access our settings, we need to modify
-# alien_invasion.py as follows
+# 3. creating a setting class
+# 4. Adding the Ship Image
+# 5. Create the ship class
+# 6. drawing the ship to the screen 
 
 import sys
 # use the tools in sys module to exit the game when the player quits
 import pygame
 
 from settings import Settings
+from ship import Ship
 
 class AlienVasion:
     
@@ -25,6 +27,9 @@ class AlienVasion:
 
         # set the background color
         # self.bg_color = (230, 230, 230)
+
+        # The call to Ship() requires one argument, an instance of AlienInvasion.
+        self.ship = Ship(self)
     
     def run_game(self):
         # the while loop contains an event loop and code that manages
@@ -42,6 +47,8 @@ class AlienVasion:
             # Each color value can range from 0 to 255. The color value (255, 0, 0) is red, 
             # (0, 255, 0) is green, and (0, 0, 255) is blue.
             self.screen.fill(self.settings.bg_color)
+
+            self.ship.blitme()
             # tells Pygame to make the most recently drawn screen visible
             pygame.display.flip()
 
