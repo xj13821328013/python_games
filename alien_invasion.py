@@ -4,6 +4,7 @@
 # 4. Adding the Ship Image
 # 5. Create the ship class
 # 6. drawing the ship to the screen 
+# 7. Refactor: the _check_events() and _update_screen() Methods
 
 import sys
 # use the tools in sys module to exit the game when the player quits
@@ -35,22 +36,27 @@ class AlienVasion:
         # the while loop contains an event loop and code that manages
         # screeen updates
         while True:
-            # an event is an action that the user performs while playing the game,
-            # such as pressing a key or moving the mouse.
-            for event in pygame.event.get():
-                # we write this event loop to listen for events and perform appropriate
-                # tasks deponding on the kinds of events that occur
-                if event.type == pygame.QUIT:
-                    sys.exit()
+            self._check_events()
+            self._update_screen()
 
-            # Redraw the screen during each pass through the loop
-            # Each color value can range from 0 to 255. The color value (255, 0, 0) is red, 
-            # (0, 255, 0) is green, and (0, 0, 255) is blue.
-            self.screen.fill(self.settings.bg_color)
+    def _check_events(self):
+        # an event is an action that the user performs while playing the game,
+        # such as pressing a key or moving the mouse.
+        for event in pygame.event.get():
+            # we write this event loop to listen for events and perform appropriate
+            # tasks deponding on the kinds of events that occur
+            if event.type == pygame.QUIT:
+                sys.exit()
 
-            self.ship.blitme()
-            # tells Pygame to make the most recently drawn screen visible
-            pygame.display.flip()
+    def _update_screen(self):
+        # Redraw the screen during each pass through the loop
+        # Each color value can range from 0 to 255. The color value (255, 0, 0) is red, 
+        # (0, 255, 0) is green, and (0, 0, 255) is blue.
+        self.screen.fill(self.settings.bg_color)
+
+        self.ship.blitme()
+        # tells Pygame to make the most recently drawn screen visible
+        pygame.display.flip()
 
 if __name__ == '__main__':
     # make a game instance, then run the game
