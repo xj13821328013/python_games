@@ -1,11 +1,14 @@
-# 1.creating a pygame window and responding to user input
-# 2.setting the background color
+# 1. creating a pygame window and responding to user input
+# 2. setting the background color
 # 3. creating a setting class
 # 4. Adding the Ship Image
 # 5. Create the ship class
 # 6. drawing the ship to the screen 
 # 7. Refactor: the _check_events() and _update_screen() Methods
+# 8. ploting the ship -- responding to the keypress
+# 9. Allowing Continuous Movement
 
+from re import S
 import sys
 # use the tools in sys module to exit the game when the player quits
 import pygame
@@ -37,6 +40,7 @@ class AlienVasion:
         # screeen updates
         while True:
             self._check_events()
+            self.ship.update()
             self._update_screen()
 
     def _check_events(self):
@@ -47,6 +51,14 @@ class AlienVasion:
             # tasks deponding on the kinds of events that occur
             if event.type == pygame.QUIT:
                 sys.exit()
+            
+            # moving_right is set to True when the right arrow key is pressed and False when the key is released
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    self.ship.moving_right = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    self.ship.moving_right = False
 
     def _update_screen(self):
         # Redraw the screen during each pass through the loop
