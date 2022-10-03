@@ -7,6 +7,9 @@
 # 7. Refactor: the _check_events() and _update_screen() Methods
 # 8. ploting the ship -- responding to the keypress
 # 9. Allowing Continuous Movement
+# 10. Moving Both Left and Right
+# 11. Adjusting the Ship’s Speed
+# 12. Limiting the Ship’s Range
 
 from re import S
 import sys
@@ -56,9 +59,13 @@ class AlienVasion:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     self.ship.moving_right = True
+                if event.key == pygame.K_LEFT:
+                    self.ship.moving_left = True
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT:
                     self.ship.moving_right = False
+                if event.key == pygame.K_LEFT:
+                    self.ship.moving_left = False
 
     def _update_screen(self):
         # Redraw the screen during each pass through the loop
