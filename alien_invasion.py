@@ -8,15 +8,20 @@
 # 8. ploting the ship -- responding to the keypress
 # 9. Allowing Continuous Movement
 # 10. Moving Both Left and Right
-# 11. Adjusting the Ship’s Speed
-# 12. Limiting the Ship’s Range
+# 11. Adjusting the Ship's Speed
+# 12. Limiting the Ship's Range
 # 13. Pressing Q to Quit
 # 14. Running the Game in Fullscreen Mode
+# 15. Shooting Bullets - Adding the Bullet Settings
+# 16. Creating the Bullet Class
+# 17. Storing Bullets in a Group
+# 18. Firing Bullets
 
-from re import S
 import sys
+
 # use the tools in sys module to exit the game when the player quits
 import pygame
+from bullet import Bullet
 
 from settings import Settings
 from ship import Ship
@@ -44,13 +49,17 @@ class AlienVasion:
 
         # The call to Ship() requires one argument, an instance of AlienInvasion.
         self.ship = Ship(self)
+        # the group automatically calls update() for each sprite in the group
+        self.bullets = pygame.sprite.Group()
     
     def run_game(self):
         # the while loop contains an event loop and code that manages
-        # screeen updates
-        while True:
+        # screeen updates, The main loop of the game, a while loop
+        while True: 
             self._check_events()
             self.ship.update()
+            # The line self.bullets.update() calls bullet.update() for each bullet we place in the group bullets.
+            self.bullets.update()
             self._update_screen()
 
     def _check_events(self):
@@ -68,11 +77,16 @@ class AlienVasion:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
 
+
     def _check_keydown_events(self, event):
         if event.key == pygame.K_RIGHT:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
+            # print("ready to move left")
             self.ship.moving_left = True
+        elif event.key == pygame.K_SPACE:
+            # print("ready to fire")
+            self._fire_bullet()
         elif event.key == pygame.K_q:
             sys.exit() 
         
@@ -81,6 +95,13 @@ class AlienVasion:
             self.ship.moving_right = False
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
+    
+    def _fire_bullet(self):
+         """Create a new bullet and add it to the bullets group."""
+        #  print("fire")
+         new_bullet = Bullet(self)
+        #  The add() method is similar to append(), but it’s a method that’s written spe­ cifically for Pygame groups.
+         self.bullets.add(new_bullet)
 
     def _update_screen(self):
         # Redraw the screen during each pass through the loop
@@ -89,8 +110,14 @@ class AlienVasion:
         self.screen.fill(self.settings.bg_color)
 
         self.ship.blitme()
+        # We also need to modify _update_screen() to make sure each bullet is drawn to the screen before we call flip().
+        for bullet in self.bullets.sprites(): 
+        # The bullets.sprites() method returns a list of all sprites in the group bullets.
+            bullet.draw_bullet()
         # tells Pygame to make the most recently drawn screen visible
         pygame.display.flip()
+
+
 
 if __name__ == '__main__':
     # make a game instance, then run the game
