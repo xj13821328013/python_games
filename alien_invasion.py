@@ -16,6 +16,9 @@
 # 16. Creating the Bullet Class
 # 17. Storing Bullets in a Group
 # 18. Firing Bullets
+# 19. Deleting Old Bullets
+# 20. Limiting the Number of Bullets
+# 21. Creating the _update_bullets() Method
 
 import sys
 
@@ -59,7 +62,9 @@ class AlienVasion:
             self._check_events()
             self.ship.update()
             # The line self.bullets.update() calls bullet.update() for each bullet we place in the group bullets.
-            self.bullets.update()
+            # Now our main loop contains only minimal code, so we can quickly read the method names and understand what’s happening in the game.
+            self._update_bullets()
+
             self._update_screen()
 
     def _check_events(self):
@@ -96,12 +101,26 @@ class AlienVasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
     
+
     def _fire_bullet(self):
-         """Create a new bullet and add it to the bullets group."""
-        #  print("fire")
-         new_bullet = Bullet(self)
-        #  The add() method is similar to append(), but it’s a method that’s written spe­ cifically for Pygame groups.
-         self.bullets.add(new_bullet)
+        """Create a new bullet and add it to the bullets group."""
+        if len(self.bullets) < self.settings.bullet_allowed:
+            new_bullet = Bullet(self)
+            #  The add() method is similar to append(), but it’s a method that’s written spe­ cifically for Pygame groups.
+            self.bullets.add(new_bullet)
+    
+    def _update_bullets(self):
+        """ Update position of bullets and get rid of old bullets. write the purpose of each function"""
+        # Update bullet positions.
+        self.bullets.update()
+            
+        # Get rid of bullets that have disappeared.
+        # Because we can’t remove items from a list or group within a for loop, we have to loop over a copy of the group
+        # We use the copy() method to set up the for loopu, which enables us to modify bullets inside the loopclear
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+        # print(len(self.bullets))
 
     def _update_screen(self):
         # Redraw the screen during each pass through the loop
