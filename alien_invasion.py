@@ -46,7 +46,7 @@ class AlienVasion:
             # The line self.bullets.update() calls bullet.update() for each bullet we place in the group bullets.
             # Now our main loop contains only minimal code, so we can quickly read the method names and understand what’s happening in the game.
             self._update_bullets()
-
+            self._update_aliens()
             self._update_screen()
 
     def _check_events(self):
@@ -133,6 +133,29 @@ class AlienVasion:
         alien.rect.y = alien_height + 2 * alien_height * row_number
         alien.rect.x = alien.x
         self.aliens.add(alien)
+    
+    def _check_fleet_edges(self):
+        """Respond appropriately if any aliens have reached an edge."""
+        for alien in self.aliens.sprites():
+            if alien.check_edges() == True:
+                # print("check edges")
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Drop the entire fleet and change the fleet's direction."""
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
+    
+    def _update_aliens(self):
+        """Update the positions of all aliens in the fleet."""
+        """
+            Check if the fleet is at an edge,
+            then update the positions of all aliens in the fleet.
+        """
+        self._check_fleet_edges()
+        self.aliens.update()
 
     def _update_screen(self):
         # Redraw the screen during each pass through the loop
@@ -147,6 +170,7 @@ class AlienVasion:
             bullet.draw_bullet()
         # tells Pygame to make the most recently drawn screen visible
         # When you call draw() on a group, Pygame draws each element in the group at the position defined by its rect attribute.
+        # self.aliens.update()
         self.aliens.draw(self.screen)
         pygame.display.flip()
 

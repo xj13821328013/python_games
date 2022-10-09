@@ -27,3 +27,7 @@
 # 27. Refactoring _create_fleet()
 # 28. Adding Rows
 # 29. Making the Fleet Move
+# 30. Moving the Aliens Right
+# 31. Creating Settings for Fleet Direction
+# 32. Checking Whether an Alien Has Hit the Edge
+# 33. Dropping the Fleet and Changing Direction
