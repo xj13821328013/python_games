@@ -1,25 +1,3 @@
-# 1. creating a pygame window and responding to user input
-# 2. setting the background color
-# 3. creating a setting class
-# 4. Adding the Ship Image
-# 5. Create the ship class
-# 6. drawing the ship to the screen 
-# 7. Refactor: the _check_events() and _update_screen() Methods
-# 8. ploting the ship -- responding to the keypress
-# 9. Allowing Continuous Movement
-# 10. Moving Both Left and Right
-# 11. Adjusting the Ship's Speed
-# 12. Limiting the Ship's Range
-# 13. Pressing Q to Quit
-# 14. Running the Game in Fullscreen Mode
-# 15. Shooting Bullets - Adding the Bullet Settings
-# 16. Creating the Bullet Class
-# 17. Storing Bullets in a Group
-# 18. Firing Bullets
-# 19. Deleting Old Bullets
-# 20. Limiting the Number of Bullets
-# 21. Creating the _update_bullets() Method
-
 import sys
 
 # use the tools in sys module to exit the game when the player quits
@@ -28,6 +6,7 @@ from bullet import Bullet
 
 from settings import Settings
 from ship import Ship
+from alien import Alien
 
 class AlienVasion:
     
@@ -54,6 +33,9 @@ class AlienVasion:
         self.ship = Ship(self)
         # the group automatically calls update() for each sprite in the group
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+
+        self._create_fleet()
     
     def run_game(self):
         # the while loop contains an event loop and code that manages
@@ -121,6 +103,36 @@ class AlienVasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
         # print(len(self.bullets))
+    
+    def _create_fleet(self):
+        """Create the fleet of aliens."""
+        # Create an alien and find the number of aliens in a row.
+        # Spacing between each alien is equal to one alien width.
+        alien = Alien(self)
+        alien_width = alien.rect.width
+        available_space_x = self.settings.screen_width - (2 * alien_width)
+        number_aliens_x = available_space_x // (2 * alien_width)
+
+        alien_height = alien.rect.height
+        ship_height = self.ship.rect.height
+        # The result will create some empty space above the ship, so the player has some time 
+        # to start shooting aliens at the beginning of each level.
+        available_space_y = self.settings.screen_height - (3 * alien_height) - ship_height
+        number_rows = available_space_y // (2 * alien_height)
+        # Create the full fleet of aliens.
+        for row_number in range(number_rows):
+            for alien_number in range(number_aliens_x):
+                self._create_alien(row_number, alien_number)
+            
+    def _create_alien(self, row_number, alien_number):
+        """Create an alien and place it in the row."""
+        alien = Alien(self)
+        alien_width = alien.rect.width
+        alien_height = alien.rect.height
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.y = alien_height + 2 * alien_height * row_number
+        alien.rect.x = alien.x
+        self.aliens.add(alien)
 
     def _update_screen(self):
         # Redraw the screen during each pass through the loop
@@ -134,9 +146,9 @@ class AlienVasion:
         # The bullets.sprites() method returns a list of all sprites in the group bullets.
             bullet.draw_bullet()
         # tells Pygame to make the most recently drawn screen visible
+        # When you call draw() on a group, Pygame draws each element in the group at the position defined by its rect attribute.
+        self.aliens.draw(self.screen)
         pygame.display.flip()
-
-
 
 if __name__ == '__main__':
     # make a game instance, then run the game
